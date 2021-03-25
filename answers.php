@@ -95,13 +95,66 @@ echo "The first the product code of all the products from the line 'Trucks and B
 
 new_question(7);
 $firstEmployeeLastNameT = $db->query("
-SELECT lastName,");
+SELECT lastName,
+       email
+FROM employees
+WHERE lastName LIKE 'T%'
+ORDER BY lastName
+");
 
-$result = $firstEmployeeLastNameT ->fetchall(PDO::FETCH_ASSOC);
+$result = $firstEmployeeLastNameT->fetchall(PDO::FETCH_ASSOC);
 
 printr($result);
 
+echo "The email of the first employee, which last name starts with a 't' is lthompson@classicmodelcars.com";
 
 new_question(8);
+
+$customerPayment = $db->query("
+SELECT customerNumber, 
+       paymentDate
+FROM payments
+WHERE paymentDate LIKE '2004-01-19'
+");
+
+$result = $customerPayment->fetchall(PDO::FETCH_ASSOC);
+
+printr($result);
+
+echo "the customer number who payed by check on 2004-01-19 is 177";
+
 new_question(9);
+
+$customerLocation = $db->query("
+SELECT contactLastName,
+        state
+FROM customers
+WHERE state LIKE '%NY%'
+OR state LIKE '%NV%'
+");
+
+$result = $customerLocation->fetchall(PDO::FETCH_ASSOC);
+
+printr($result);
+
+echo " 7 customers are living in the state Nevada or New York";
+
 new_question(10);
+
+$customerLocation = $db->query("
+SELECT contactLastName,
+        state,
+        country
+FROM customers      
+WHERE country  LIKE '%NY%'
+OR state LIKE '%NV%'
+OR country != 'USA'
+
+");
+
+$result = $customerLocation->fetchall(PDO::FETCH_ASSOC);
+
+printr($result);
+
+echo " 87 customers are living in the state Nevada or New York and outside of USA";
+
