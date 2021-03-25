@@ -146,7 +146,7 @@ SELECT contactLastName,
         state,
         country
 FROM customers      
-WHERE country  LIKE '%NY%'
+WHERE state  LIKE '%NY%'
 OR state LIKE '%NV%'
 OR country != 'USA'
 
@@ -156,5 +156,5 @@ $result = $customerLocation->fetchall(PDO::FETCH_ASSOC);
 
 printr($result);
 
-echo " 87 customers are living in the state Nevada or New York and outside of USA";
+echo " 93 customers are living in the state Nevada or New York and outside of USA";
 
