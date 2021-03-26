@@ -9,7 +9,7 @@ $db = new PDO("mysql:host=mysql;dbname=classicmodels;port=3306", "root", "root")
 
 new_question(1);
 $customerQuantity= $db->query("
-SELECT *
+SELECT COUNT(*) 
 FROM customers");
 $result = $customerQuantity->fetchall(PDO::FETCH_ASSOC);
 
@@ -142,9 +142,7 @@ echo " 7 customers are living in the state Nevada or New York";
 new_question(10);
 
 $customerLocation = $db->query("
-SELECT contactLastName,
-        state,
-        country
+SELECT COUNT(*)
 FROM customers      
 WHERE state  LIKE '%NY%'
 OR state LIKE '%NV%'
@@ -158,3 +156,306 @@ printr($result);
 
 echo " 93 customers are living in the state Nevada or New York and outside of USA";
 
+new_question(11);
+
+try {
+   dbQuery();
+    $customerLocation = $db->prepare("
+SELECT COUNT(*) 
+FROM customers      
+WHERE state  = 'NY'
+OR state = 'NV'
+OR country != 'USA'
+AND creditLimit > '1000.00'
+");
+    $customerLocation->execute();
+    $result = $customerLocation->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}
+catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+}
+
+new_question(12);
+try{
+    dbQuery();
+    $notSalesRepresentative = $db->prepare("
+SELECT COUNT(*)
+FROM customers
+WHERE salesRepEmployeeNumber IS NULL 
+");
+    $notSalesRepresentative->execute();
+    $result = $notSalesRepresentative->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}
+catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+}
+
+new_question(13);
+try{
+    dbQuery();
+    $ordersComment = $db->prepare("
+SELECT COUNT(*)
+FROM orders
+WHERE comments IS NOT NULL 
+");
+    $ordersComment->execute();
+    $result = $ordersComment->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+}
+new_question(14);
+try{
+    dbQuery();
+    $ordersComment = $db->prepare("
+SELECT COUNT(*)
+FROM orders
+WHERE comments LIKE '%caution%' 
+");
+    $ordersComment->execute();
+    $result = $ordersComment->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+}
+new_question(15);
+try{
+    dbQuery();
+    $averageCreditLimit= $db->prepare("
+SELECT ROUND(AVG(creditLimit))
+FROM customers
+WHERE country LIKE 'USA'
+");
+    $averageCreditLimit->execute();
+    $result = $averageCreditLimit->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+}
+new_question(16);
+try{
+    dbQuery();
+    $mostCommon= $db->prepare("
+SELECT MAX(contactLastName)
+FROM customers
+");
+    $mostCommon->execute();
+    $result = $mostCommon->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+}
+new_question(17);
+try{
+    dbQuery();
+    $mostCommon= $db->prepare("
+SELECT DISTINCT(status)
+FROM orders
+");
+    $mostCommon->execute();
+    $result = $mostCommon->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+}
+new_question(18);
+try{
+    dbQuery();
+    $noCustomers= $db->prepare("
+SELECT DISTINCT(country)
+FROM customers
+");
+    $noCustomers->execute();
+    $result = $noCustomers->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+}
+new_question(19);
+
+try{
+    dbQuery();
+    $noCustomers= $db->prepare("
+SELECT COUNT(*)
+FROM orders
+WHERE status IN ('Cancelled', 'Disputed')
+");
+    $noCustomers->execute();
+    $result = $noCustomers->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+}
+new_question(20);
+
+try{
+    dbQuery();
+    $neverShipped= $db->prepare("
+SELECT salesRepEmployeeNumber,
+       creditLimit
+FROM customers
+JOIN employees ON salesRepEmployeeNumber= employeeNumber 
+                      WHERE lastName ='Patterson' AND firstName='Steve'
+                      HAVING creditLimit > '100000.00'
+");
+    $neverShipped->execute();
+    $result = $neverShipped->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+new_question(21);
+try{
+    dbQuery();
+    $neverShipped= $db->prepare("
+SELECT COUNT(*)
+FROM orders
+WHERE status = 'Shipped'
+");
+    $neverShipped->execute();
+    $result = $neverShipped->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+new_question(22);
+try{
+    dbQuery();
+    $neverShipped= $db->prepare("
+SELECT AVG(Average_products) 
+FROM     
+(
+SELECT productLine, AVG(quantityInStock) 'Average_products'
+FROM products
+GROUP BY productLine)avgs
+");
+    $neverShipped->execute();
+    $result = $neverShipped->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+
+new_question(23);
+try{
+    dbQuery();
+    $countProduct= $db->prepare("
+SELECT count(*)
+FROM products
+WHERE quantityInStock < '100'
+
+
+");
+    $countProduct->execute();
+    $result = $countProduct->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+new_question(24);
+try{
+    dbQuery();
+    $countProduct= $db->prepare("
+SELECT COUNT(*)
+FROM products
+WHERE quantityInStock BETWEEN '100' AND '500'
+
+
+");
+    $countProduct->execute();
+    $result = $countProduct->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+new_question(25);
+try{
+    dbQuery();
+    $countProduct= $db->prepare("
+SELECT COUNT(*)
+FROM orders
+WHERE shippedDate BETWEEN '2004-06-01' AND '2004-09-30' AND status = 'Shipped'
+
+");
+    $countProduct->execute();
+    $result = $countProduct->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+new_question(26);
+
+try{
+    dbQuery();
+    $countProduct= $db->prepare("
+SELECT COUNT(contactLastName)
+FROM customers
+JOIN employees ON contactLastName = lastName
+
+
+");
+    $countProduct->execute();
+    $result = $countProduct->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+new_question(27);
+try{
+    dbQuery();
+    $countProduct= $db->prepare("
+SELECT MAX(buyPrice),
+       productCode
+FROM products
+
+");
+    $countProduct->execute();
+    $result = $countProduct->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+new_question(28);
+try{
+    dbQuery();
+    $countProduct= $db->prepare("
+SELECT productCode,
+       SUM(MSRP - buyPrice) 
+FROM products
+GROUP BY productCode
+ORDER BY SUM(MSRP - buyPrice) DESC
+
+
+");
+    $countProduct->execute();
+    $result = $countProduct->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+new_question(29);
+try{
+    dbQuery();
+    $countProduct= $db->prepare("
+
+
+");
+    $countProduct->execute();
+    $result = $countProduct->fetchall(PDO::FETCH_ASSOC);
+    printr($result);
+}catch(PDOException $e){
+    echo "Error : " . $e->getMessage();
+
+}
+new_question(30);
